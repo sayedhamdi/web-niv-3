@@ -1,0 +1,15 @@
+h1= "Flight " + context.flight.id
+ul
+    li= "origin : " + context.flight.origin+"("+context.flight.origin_code+")"
+    li= "destination : " + context.flight.destination+"("+context.flight.destination_code+")"
+    li= "duration : " + context.flight.duration
+h1 Passengers
+
+ul 
+    each passenger in context.passengers
+        li= passenger.name
+
+h1 Add passenger
+select 
+    each passenger in context.passengers
+        option= passenger.name

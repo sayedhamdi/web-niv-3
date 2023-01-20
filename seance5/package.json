@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "start": "nodemon index.js",
+    "db:create": "sqlite3 db.db < create.sql && echo 'Database created'"
+  },
   "dependencies": {
     "express": "^4.18.2",
     "pug": "^3.0.2",

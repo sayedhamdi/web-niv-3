@@ -1,3 +1,4 @@
-ul       <a href="localhost:8000/flights/fliught"flight.origin) flight.origin
+ul      
   each flight in flights
-    li 
+    li
+      a( href=`/flights/${flight.id}`)= flight.origin + ' to ' + flight.destination

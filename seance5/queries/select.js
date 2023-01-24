@@ -1,7 +1,8 @@
-let getFlightsWithDetails = `SELECT 
-flights.id as id,
-origin.city AS origin,
-destination.city AS destination,
+let getFlightsWithDetails = `
+SELECT 
+    flights.id as id,
+    origin.city AS origin,
+    destination.city AS destination,
 flights.duration
 FROM 
  flights
@@ -40,13 +41,11 @@ WHERE flights.id = ${id};
     WHERE passengers.flight_id = ${id};
  `
  let getNotPassengers = (id)=>`
-    SELECT 
-        p.first || ' ' || p.last AS name
-    FROM 
-        passengers
-    INNER JOIN 
-        people p ON (p.id = passengers.person_id)
-    WHERE passengers.flight_id != ${id};
+ SELECT people.first || ' ' || people.last AS name
+ FROM people
+WHERE people.id NOT IN (SELECT person_id
+                FROM passengers
+                WHERE passengers.flight_id = ${id});
  `
 
 module.exports = {

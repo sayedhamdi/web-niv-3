@@ -1,22 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
-  hsan String?
-}
-
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
-}
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -24,4 +5,37 @@ generator client {
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
+}
+
+model airports {
+  id                                       Int       @id @default(autoincrement())
+  code                                     String?
+  city                                     String?
+  origins flights[] @relation("flights_destination_idToairports")
+  desinations      flights[] @relation("flights_origin_idToairports")
+}
+
+model flights {
+  id                                        Int          @id @default(autoincrement())
+  origin_id                                 Int?
+  destination_id                            Int?
+  duration                                  Int?
+  origin airports?    @relation("flights_destination_idToairports", fields: [origin_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  destination      airports?    @relation("flights_origin_idToairports", fields: [destination_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  passengers                                passengers[]
+}
+
+model passengers {
+  id        Int      @id @default(autoincrement())
+  person_id Int?
+  flight_id Int?
+  flights   flights? @relation(fields: [flight_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  people    people?  @relation(fields: [person_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model people {
+  id         Int          @id @default(autoincrement())
+  first      String?
+  last       String?
+  passengers passengers[]
 }

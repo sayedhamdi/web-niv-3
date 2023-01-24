@@ -12,9 +12,9 @@ prisma.$connect().then(()=>{
 const app = express()
 app.use(cors())
 app.use(express.json())
-app.get("/users",async (req,res)=>{
-    let users = await prisma.user.findMany()
-    res.json(users)
+app.get("/flights",async (req,res)=>{
+    let flights = await prisma.flights.findMany()
+    res.json(flights)
 })
 
 

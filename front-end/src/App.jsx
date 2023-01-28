@@ -3,8 +3,7 @@ import reactLogo from './assets/react.svg'
 import './App.css'
 
 import { BrowserRouter as Router,Routes,Route } from 'react-router-dom'
-import Users from './pages/Users'
-import User from './pages/User'
+import { Flights,User,Users } from './pages'
 
 function App() {
  
@@ -13,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/users" element={<Users />} />
         <Route path="/users/:id" element={<User />} />
+        <Route path="/flights" element={<Flights />} />
       </Routes>
     </Router>
   )

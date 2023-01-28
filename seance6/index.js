@@ -1,8 +1,18 @@
+//dependencies
+
 const express = require("express")
 const { PrismaClient }  =  require('@prisma/client')
 const cors = require("cors")
-
+const config = require("./config")
 const prisma = new PrismaClient()
+const morgan = require("morgan")
+const fs = require("fs")
+const path = require("path")
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+
+const flightsRouter = require("./routes/flights")
+
+
 prisma.$connect().then(()=>{
     console.log("db connected succesfully")
 }).catch(err=>{
@@ -10,15 +20,23 @@ prisma.$connect().then(()=>{
 })
 
 const app = express()
-app.use(cors())
+
+const corsOptions = {
+    origin: config.env ==='prod'? config.clientUrl : config.clientUrl  ,
+    optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions))
 app.use(express.json())
-app.get("/flights",async (req,res)=>{
-    let flights = await prisma.flights.findMany()
-    res.json(flights)
-})
+app.use(morgan("dev"))
 
 
-app.listen(8000,()=>{
-    console.log("listening on port 8000");
+
+app.use("/flights",flightsRouter)
+app.use("/airports",airportsRouter)
+
+
+app.listen(config.port,()=>{
+    console.log(`listening on port ${config.port}`);
 })
 

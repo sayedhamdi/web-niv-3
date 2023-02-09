@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form style="display: flex; flex-direction: column; width: 300px">
+      <input type="file" />
+      <button>submit</button>
+      <progress value="0" max="100"></progress>
+    </form>
+  </body>
+  <script>
+    let btn = document.querySelector("button");
+    let input = document.querySelector("input");
+    let form = document.querySelector("form");
+    let progress = document.querySelector("progress");
+    form.onsubmit = (e) => e.preventDefault();
+    btn.onclick = () => {
+      console.log("upload");
+      console.log(input.files);
+      let fileReader = new FileReader();
+      fileReader.readAsArrayBuffer(input.files[0]);
+
+      fileReader.onload = async (e) => {
+        let file = e.target.result;
+        console.log(e);
+        const CHUNK_SIZE = 1000;
+        console.log(e.total);
+        const CHUNK_NUMBER = e.total / CHUNK_SIZE + 1;
+        console.log(CHUNK_NUMBER);
+        for (let CHUNK_ID = 0; CHUNK_ID < CHUNK_NUMBER; CHUNK_ID++) {
+          // send request to server
+          let CHUNK = file.slice(CHUNK_ID * CHUNK_SIZE, (CHUNK_ID + 1) * 1000);
+          let res = await fetch("http://localhost:8000/upload", {
+            method: "post",
+            body: CHUNK,
+          });
+          let pourcentage = (CHUNK_ID / CHUNK_NUMBER) * 100;
+          progress.value = pourcentage;
+          console.log("sending chunk " + CHUNK_ID);
+        }
+
+        console.log(file);
+      };
+    };
+  </script>
+</html>

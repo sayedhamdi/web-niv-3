@@ -11,7 +11,7 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'),
 
 // handlers
 const flightsRouter = require("./routes/flights")
-
+const peopleRouter = require("./routes/people")
 // db connexion
 prisma.$connect().then(()=>{
     console.log("db connected succesfully")
@@ -38,7 +38,7 @@ app.use(morgan("dev"))
 
 
 app.use("/flights",flightsRouter)
-
+app.use("/persons",peopleRouter)
 
 app.listen(config.port,()=>{
     console.log(`listening on port ${config.port}`);
